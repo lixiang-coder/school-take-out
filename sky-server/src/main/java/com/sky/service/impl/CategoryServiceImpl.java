@@ -108,4 +108,20 @@ public class CategoryServiceImpl implements CategoryService {
         //删除分类数据
         categoryMapper.deleteById(id);
     }
+
+
+    /**
+     * 启用、禁用分类
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, Long id) {
+        //update category set status ? where id = ?
+        Category category = Category.builder()
+                .status(status)
+                .id(id)
+                .build();
+        categoryMapper.update(category);
+    }
 }

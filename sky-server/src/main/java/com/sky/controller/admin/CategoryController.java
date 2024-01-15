@@ -12,6 +12,8 @@ import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.rtf.RTFEditorKit;
+
 
 /**
  * 分类管理
@@ -41,6 +43,7 @@ public class CategoryController {
 
     /**
      * 分类分页查询
+     *
      * @param categoryPageQueryDTO
      * @return
      */
@@ -55,14 +58,30 @@ public class CategoryController {
 
     /**
      * 根据id删除分类
+     *
      * @param id
      * @return
      */
     @DeleteMapping
     @ApiOperation("根据id删除分类")
     public Result deleteById(Long id) {
-        log.info("根据id删除分类，{}",id);
+        log.info("根据id删除分类，{}", id);
         categoryService.deleteById(id);
+        return Result.success();
+    }
+
+
+    /**
+     * 启用、禁用分类
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("启用、禁用分类")
+    public Result startOrStop(@PathVariable Integer status, Long id) {
+        log.info("启用、禁用分类：{}，{}",status,id);
+        categoryService.startOrStop(status,id);
         return Result.success();
     }
 }
