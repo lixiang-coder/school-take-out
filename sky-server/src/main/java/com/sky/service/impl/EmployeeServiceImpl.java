@@ -68,6 +68,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 新增员工
+     *
      * @param employeeDTO
      */
     @Override
@@ -81,7 +82,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //employee.setName(employeeDTO.getName());
 
         //对象属性的拷贝(DTO中的数据不完全，需要自己再补充完整)
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         //设置员工状态默认为启用状态  1：启用    2：禁用
         employee.setStatus(StatusConstant.ENABLE);
@@ -107,6 +108,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 员工分页查询
+     *
      * @param employeePageQueryDTO
      * @return
      */
@@ -114,7 +116,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         // select * from employee limit 0,10
         //开始分页查询,借用PageHelper插件来完成
-        PageHelper.startPage(employeePageQueryDTO.getPage(),employeePageQueryDTO.getPageSize());
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
 
         //使用这个插件就必须返回Page
         Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
@@ -122,7 +124,28 @@ public class EmployeeServiceImpl implements EmployeeService {
         long total = page.getTotal();
         List<Employee> records = page.getResult();
 
-        return new PageResult(total,records);
+        return new PageResult(total, records);
+    }
+
+    /**
+     * 启用、禁用员工账号
+     *
+     * @param status
+     */
+    @Override
+    public void startOrstop(Integer status, long id) {
+        //update employee set status = ? where id = ?
+        /*Employee employee = new Employee();
+        employee.setStatus(status);
+        employee.setId(id);*/
+
+        //根据Builder来构建
+        //Employee employee = Employee.builder().status(status).id(id).build();
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+        employeeMapper.update(employee);
     }
 
 }
