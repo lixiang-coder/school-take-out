@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.xmlbeans.impl.xb.xsdschema.impl.PublicImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -111,13 +112,42 @@ public class EmployeeController {
 
     /**
      * 启用、禁用员工账号
+     *
      * @return
      */
     @PostMapping("/status/{status}")
     @ApiOperation("启用、禁用员工账号")
-    public Result startOrstop(@PathVariable Integer status,long id) {
-        log.info("启用禁用员工账号：{},{}",status,id);
-        employeeService.startOrstop(status,id);
+    public Result startOrstop(@PathVariable Integer status, long id) {
+        log.info("启用禁用员工账号：{},{}", status, id);
+        employeeService.startOrstop(status, id);
         return Result.success();
     }
+
+
+    /**
+     * 根据id查询员工信息
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @ApiOperation("根据id查询员工信息")
+    public Result<Employee> getById(@PathVariable Integer id) {
+        log.info("根据id查询员工信息，id为：{}", id);
+        Employee employee = employeeService.getById(id);
+        return Result.success(employee);
+    }
+
+    /**
+     * 编辑员工信息
+     * @return
+     */
+    @PutMapping
+    @ApiOperation("编辑员工信息")
+    public Result update(@RequestBody EmployeeDTO employeeDTO) {
+        log.info("编辑员工信息：{}",employeeDTO);
+        employeeService.update(employeeDTO);
+        return Result.success();
+    }
+
+
 }
