@@ -8,11 +8,9 @@ import com.sky.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -49,8 +47,22 @@ public class CategoryController {
     @GetMapping("/page")
     @ApiOperation("分类分页查询")
     public Result<PageResult> page(CategoryPageQueryDTO categoryPageQueryDTO) {
-        log.info("分类分页查询，参数为：{}",categoryPageQueryDTO);
+        log.info("分类分页查询，参数为：{}", categoryPageQueryDTO);
         PageResult pageResult = categoryService.page(categoryPageQueryDTO);
         return Result.success(pageResult);
+    }
+
+
+    /**
+     * 根据id删除分类
+     * @param id
+     * @return
+     */
+    @DeleteMapping
+    @ApiOperation("根据id删除分类")
+    public Result deleteById(Long id) {
+        log.info("根据id删除分类，{}",id);
+        categoryService.deleteById(id);
+        return Result.success();
     }
 }

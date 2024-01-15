@@ -3,11 +3,13 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.CategoryDTO;
 import com.sky.dto.CategoryPageQueryDTO;
 import com.sky.entity.Category;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.CategoryMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
@@ -32,6 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 新增分类
+     *
      * @param categoryDTO
      */
     @Override
@@ -40,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
 
         //对象属性的拷贝(DTO中的数据不完全，需要自己再补充完整)
-        BeanUtils.copyProperties(categoryDTO,category);
+        BeanUtils.copyProperties(categoryDTO, category);
 
         //设置分类状态 1：启用  0：禁用
         category.setStatus(StatusConstant.ENABLE);
@@ -62,6 +65,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 分类分页查询
+     *
      * @param categoryPageQueryDTO
      * @return
      */
@@ -69,7 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     public PageResult page(CategoryPageQueryDTO categoryPageQueryDTO) {
         //select * from category limit 0,10
         //使用分页查询插件PageHelper来完成
-        PageHelper.startPage(categoryPageQueryDTO.getPage(),categoryPageQueryDTO.getPageSize());
+        PageHelper.startPage(categoryPageQueryDTO.getPage(), categoryPageQueryDTO.getPageSize());
 
         //使用这个插件就必须返回Page
         Page<Category> page = categoryMapper.pageQuery(categoryPageQueryDTO);
@@ -77,6 +81,31 @@ public class CategoryServiceImpl implements CategoryService {
         long total = page.getTotal();
         List<Category> records = page.getResult();
 
-        return new PageResult(total,records);
+        return new PageResult(total, records);
+    }
+
+    /**
+     * 根据id删除分类
+     *
+     * @param id
+     */
+    @Override
+    public void deleteById(Long id) {
+        //查询当前分类是否关联了菜品，如果关联了就抛出业务异常
+        Integer count = dishMapper.countByCategoryId(id);
+        if (count > 0) {
+            //当前分类下有菜品，不能删除
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_DISH);
+        }
+
+        //查询当前分类是否关联了套餐，如果关联了就抛出业务异常
+        count = setmealMapper.countByCategoryId(id);
+        if (count > 0) {
+            //当前分类下有套餐，不能删除
+            throw new DeletionNotAllowedException(MessageConstant.CATEGORY_BE_RELATED_BY_SETMEAL);
+        }
+
+        //删除分类数据
+        categoryMapper.deleteById(id);
     }
 }
