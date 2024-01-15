@@ -1,7 +1,10 @@
 package com.sky.service.impl;
 
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
@@ -9,9 +12,12 @@ import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -53,6 +59,47 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //3、返回实体对象
         return employee;
+    }
+
+    /**
+     * 新增员工
+     * @param employeeDTO
+     */
+    @Override
+    public void save(EmployeeDTO employeeDTO) {
+        //System.out.println("当前线程的id：" + Thread.currentThread().getId());
+
+        //调用持久层，建议dto转成实体
+        Employee employee = new Employee();
+
+        //设置属性
+        //employee.setName(employeeDTO.getName());
+
+        //对象属性的拷贝(DTO中的数据不完全，需要自己再补充完整)
+        BeanUtils.copyProperties(employeeDTO,employee);
+
+        //设置员工状态默认为启用状态  1：启用    2：禁用
+        employee.setStatus(StatusConstant.ENABLE);
+
+        //设置员工登录的初始密码,这个密码要进行md5的加密处理
+        //employee.setPassword(DigestUtils.md5DigestAsHex("DEFAULT_PASSWORD".getBytes()));
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+
+        //设置员工的创建时间和修改时间
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        //设置当前创建人的id和修改人的id
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        /**
+         * 调用持久层：插入员工数据
+         */
+        employeeMapper.insert(employee);
+
+
+
     }
 
 }
