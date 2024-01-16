@@ -49,12 +49,12 @@ public class CategoryServiceImpl implements CategoryService {
         category.setStatus(StatusConstant.ENABLE);
 
         //设置创建时间和修改时间
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-
-        //设置当前创建人和修改人的id
-        category.setCreateUser(BaseContext.getCurrentId());
-        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setCreateTime(LocalDateTime.now());
+//        category.setUpdateTime(LocalDateTime.now());
+//
+//        设置当前创建人和修改人的id
+//        category.setCreateUser(BaseContext.getCurrentId());
+//        category.setUpdateUser(BaseContext.getCurrentId());
 
         /**
          * 调用持久层：插入分类的数据
@@ -119,8 +119,10 @@ public class CategoryServiceImpl implements CategoryService {
     public void startOrStop(Integer status, Long id) {
         //update category set status ? where id = ?
         Category category = Category.builder()
-                .status(status)
                 .id(id)
+                .status(status)
+                //.updateTime(LocalDateTime.now())
+                //.updateUser(BaseContext.getCurrentId())
                 .build();
         categoryMapper.update(category);
     }
@@ -136,8 +138,8 @@ public class CategoryServiceImpl implements CategoryService {
         //对象属性的拷贝
         BeanUtils.copyProperties(categoryDTO,category);
         //补全数据:修改时间、修改人(只补充修改的数据)
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(BaseContext.getCurrentId());
+//        category.setUpdateTime(LocalDateTime.now());
+//        category.setUpdateUser(BaseContext.getCurrentId());
 
         categoryMapper.update(category);
 

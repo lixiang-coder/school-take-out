@@ -92,12 +92,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
 
         //设置员工的创建时间和修改时间
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
-
-        //设置当前创建人的id和修改人的id
-        employee.setCreateUser(BaseContext.getCurrentId());
-        employee.setUpdateUser(BaseContext.getCurrentId());
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//
+//        设置当前创建人的id和修改人的id
+//        employee.setCreateUser(BaseContext.getCurrentId());
+//        employee.setUpdateUser(BaseContext.getCurrentId());
 
         /**
          * 调用持久层：插入员工数据
@@ -150,6 +150,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 根据id查询员工信息
+     *
      * @param id
      * @return
      */
@@ -163,6 +164,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 编辑员工信息
+     *
      * @param employeeDTO
      */
     @Override
@@ -170,11 +172,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         //调用持久层，建议dto转成实体
         Employee employee = new Employee();
         //对象属性的拷贝
-        BeanUtils.copyProperties(employeeDTO,employee);
+        BeanUtils.copyProperties(employeeDTO, employee);
 
         //补全数据
-        employee.setUpdateTime(LocalDateTime.now());//修改的时间
-        employee.setUpdateUser(BaseContext.getCurrentId());//修改人的id
+//        employee.setUpdateTime(LocalDateTime.now());//修改的时间
+//        employee.setUpdateUser(BaseContext.getCurrentId());//修改人的id
 
         employeeMapper.update(employee);
     }
