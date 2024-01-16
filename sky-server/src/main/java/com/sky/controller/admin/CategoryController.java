@@ -8,11 +8,8 @@ import com.sky.service.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.swing.text.rtf.RTFEditorKit;
 
 
 /**
@@ -73,6 +70,7 @@ public class CategoryController {
 
     /**
      * 启用、禁用分类
+     *
      * @param status
      * @param id
      * @return
@@ -80,8 +78,25 @@ public class CategoryController {
     @PostMapping("/status/{status}")
     @ApiOperation("启用、禁用分类")
     public Result startOrStop(@PathVariable Integer status, Long id) {
-        log.info("启用、禁用分类：{}，{}",status,id);
-        categoryService.startOrStop(status,id);
+        log.info("启用、禁用分类：{}，{}", status, id);
+        categoryService.startOrStop(status, id);
         return Result.success();
     }
+
+
+    /**
+     * 修改分类
+     * @param categoryDTO
+     * @return
+     */
+    @PutMapping
+    @ApiOperation("修改分类")
+    public Result update(@RequestBody CategoryDTO categoryDTO) {
+        log.info("修改分类：{}",categoryDTO);
+        categoryService.update(categoryDTO);
+        return Result.success();
+
+    }
+
+
 }

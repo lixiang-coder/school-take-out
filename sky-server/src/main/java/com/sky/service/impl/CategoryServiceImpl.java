@@ -124,4 +124,22 @@ public class CategoryServiceImpl implements CategoryService {
                 .build();
         categoryMapper.update(category);
     }
+
+    /**
+     * 修改分类
+     * @param categoryDTO
+     */
+    @Override
+    public void update(CategoryDTO categoryDTO) {
+        //调用持久层，建议dto转成实体
+        Category category = new Category();
+        //对象属性的拷贝
+        BeanUtils.copyProperties(categoryDTO,category);
+        //补全数据:修改时间、修改人(只补充修改的数据)
+        category.setUpdateTime(LocalDateTime.now());
+        category.setUpdateUser(BaseContext.getCurrentId());
+
+        categoryMapper.update(category);
+
+    }
 }
