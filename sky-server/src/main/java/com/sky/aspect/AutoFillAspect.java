@@ -50,6 +50,7 @@ public class AutoFillAspect {
             return;
         }
 
+        //在mapper层，insert和update方法参数第一位必须是实体对象
         Object entity = args[0];
 
         //准备赋值的数据
