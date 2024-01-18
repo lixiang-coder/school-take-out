@@ -38,7 +38,6 @@ public class DishServiceImpl implements DishService {
     /**
      * 新增菜品和对应的口味
      * 这里操作dish和dish_flavor两张表，所以加上Transactional注解，保证事物的原子性
-     *
      * @param dishDTO
      */
     @Override
@@ -172,5 +171,19 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(flavors);
         }
 
+    }
+
+    /**
+     * 根据分类id查询菜品
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Dish> list(Long categoryId) {
+        Dish dish = Dish.builder()
+                .categoryId(categoryId)
+                .status(StatusConstant.ENABLE)
+                .build();
+        return dishMapper.list(dish);
     }
 }
