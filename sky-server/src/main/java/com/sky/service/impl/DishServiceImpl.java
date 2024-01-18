@@ -103,7 +103,7 @@ public class DishServiceImpl implements DishService {
             }
         }
 
-        //判断当前菜品是否能够删除---是否被套餐关联了？？
+        //判断当前菜品是否能够删除---是否被套餐关联了？(就是在套餐表中查询有没有这个菜品)
         List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(ids);
         if (setmealIds != null && setmealIds.size() > 0) {
             //当前菜品关联套餐了，不能删除

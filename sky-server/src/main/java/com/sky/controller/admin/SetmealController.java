@@ -8,8 +8,11 @@ import com.sky.service.SetmealService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 套餐管理
@@ -38,7 +41,8 @@ public class SetmealController {
     }
 
     /**
-     * 分页查询
+     * 套餐分页查询
+     *
      * @param setmealPageQueryDTO
      * @return
      */
@@ -46,7 +50,23 @@ public class SetmealController {
     @ApiOperation("分页查询")
     public Result<PageResult> page(SetmealPageQueryDTO setmealPageQueryDTO) {
         log.info("套餐分页查询，参数为：{}", setmealPageQueryDTO);
-        PageResult pageResult =  setmealService.pageQuery(setmealPageQueryDTO);
+        PageResult pageResult = setmealService.pageQuery(setmealPageQueryDTO);
         return Result.success(pageResult);
     }
+
+
+    /**
+     * 批量删除套餐
+     * @param ids
+     * @return
+     */
+    @DeleteMapping
+    @ApiOperation("批量删除套餐")
+    public Result delete(@RequestParam List<Long> ids) {
+        log.info("批量删除套餐，参数为{}",ids);
+        setmealService.deleteBatch(ids);
+        return Result.success();
+    }
+
+
 }
