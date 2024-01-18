@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Stack;
 
 /**
  * 套餐管理
@@ -86,15 +87,32 @@ public class SetmealController {
 
     /**
      * 修改套餐
+     *
      * @param setmealDTO
      * @return
      */
     @PutMapping
     @ApiOperation("修改套餐")
     public Result update(@RequestBody SetmealDTO setmealDTO) {
-        log.info("修改套餐,参数为{}",setmealDTO);
+        log.info("修改套餐,参数为{}", setmealDTO);
         setmealService.update(setmealDTO);
         return Result.success();
+    }
+
+
+    /**
+     * 起售停售套餐
+     * @param status
+     * @param id
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @ApiOperation("起售停售套餐")
+    public Result startOrStop(@PathVariable Integer status,Long id) {
+        log.info("起售停售套餐,参数为{}",status,id);
+        setmealService.startOrStop(status,id);
+        return Result.success();
+
     }
 
 }
