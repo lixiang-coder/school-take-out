@@ -112,4 +112,24 @@ public class SetmealServiceImpl implements SetmealService {
         });
 
     }
+
+    /**
+     * 根据id查询套餐，用于修改页面回显数据
+     * @param id
+     * @return
+     */
+    @Override
+    public SetmealVO getByIdWithDish(long id) {
+        //根据id查询套餐
+        Setmeal setmeal = setmealMapper.getById(id);
+        //根据套餐id查询套餐和菜品的关联关系
+        List<SetmealDish> setmealDishes = setmealDishMapper.getBySetmealId(id);
+
+        //将查询到的数据封装到VO对象中
+        SetmealVO setmealVO = new SetmealVO();
+        BeanUtils.copyProperties(setmeal,setmealVO);
+        setmealVO.setSetmealDishes(setmealDishes);
+
+        return setmealVO;
+    }
 }
