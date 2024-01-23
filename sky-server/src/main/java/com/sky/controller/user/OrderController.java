@@ -5,6 +5,7 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,7 @@ public class OrderController {
 
     /**
      * 用户下单
+     *
      * @param ordersSubmitDTO
      * @return
      */
@@ -39,17 +41,30 @@ public class OrderController {
 
     /**
      * 历史订单查询
+     *
      * @param page
      * @param pageSize
-     * @param status 订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
+     * @param status   订单状态 1待付款 2待接单 3已接单 4派送中 5已完成 6已取消
      * @return
      */
     @GetMapping("/historyOrders")
     @ApiOperation("历史订单查询")
-    public Result<PageResult> page(int page, int pageSize, Integer status){
-        log.info("历史订单查询,参数为：{},{},{}",page,pageSize,status);
-        PageResult pageResult = orderService.pageQueryUser(page,pageSize,status);
+    public Result<PageResult> page(int page, int pageSize, Integer status) {
+        log.info("历史订单查询,参数为：{},{},{}", page, pageSize, status);
+        PageResult pageResult = orderService.pageQueryUser(page, pageSize, status);
         return Result.success(pageResult);
+    }
+
+    /**
+     * 查询订单详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/orderDetail/{id}")
+    @ApiOperation("查询订单详情")
+    public Result<OrderVO> details(@PathVariable Long id) {
+        OrderVO orderVO = orderService.details(id);
+        return Result.success(orderVO);
     }
 
 }
