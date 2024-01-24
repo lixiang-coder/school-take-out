@@ -53,7 +53,7 @@ public interface OrderMapper {
      * @return
      */
     @Select("select * from orders where number = #{orderNumber} and user_id= #{userId}")
-    Orders getByNumberAndUserId(String outTradeNo, Long userId);
+    Orders getByNumberAndUserId(String orderNumber, Long userId);
 
     /**
      * 用于替换微信支付更新数据库状态的问题
